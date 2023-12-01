@@ -16,7 +16,7 @@
 body {
     font-size: 1.6rem;
     color: var(--text-color);
-    background-color: rgb(226, 232, 232);
+    background-color: rgb(243, 245, 245);
 }
 
 body * {
@@ -44,6 +44,8 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    margin: 2.5rem 0;
 }
 
 header h1 {
@@ -80,6 +82,8 @@ header h1 {
 
 table {
     width: 100%;
+    border-collapse: collapse;
+    box-shadow: 2px 1px .4rem .2rem rgba(0, 0, 0, 0.3);
 }
 
 table * {
@@ -88,7 +92,37 @@ table * {
 }
 
 table th {
+    background: var(--primary-color);
+    text-align: left;
+    font-weight: normal;
+    padding: 1.5rem;
+}
 
+table th:first-child {
+    border-top-left-radius: .4rem;
+}
+
+table th:last-child {
+    border-top-right-radius: .4rem;
+}
+
+table tr:nth-child(even) {
+    color: #ede8e8;
+}
+
+table tr:nth-child(odd) {
+    background: #e3e3e3;
+}
+
+table td {
+    padding: 1.5rem;
+    text-align: left;
+}
+
+td.user {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 td.user img {
@@ -96,4 +130,20 @@ td.user img {
     height: 5rem;
 
     object-fit: cover;
+    border-radius: 50%;
+}
+
+td.user a {
+    text-decoration: none;
+}
+
+td.user a p {
+    font-weight: bold;
+}
+
+td.remove {
+    background: none;
+    border: none;
+
+    color: rgb(185, 27, 27);
 }
