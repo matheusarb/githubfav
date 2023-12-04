@@ -4,45 +4,59 @@
 export class GitFavorites {
   constructor(root) {
     this.root = document.querySelector(root);
+    this.load();
+  }
 
-    this.update();
+  load() {
+    this.entries = [
+        {
+            login: "matheusarb",
+            name: "Matheus Ribeiro",
+            public_repos: "31",
+            followers: "189"
+        },
+        {
+            login: "jgsneves",
+            name: "Joao Gabriel",
+            public_repos: "46",
+            followers: "128"
+        }
+    ];
   }
 }
 
 export class GitFavoritesView extends GitFavorites {
   constructor(root) {
     super(root);
+
+    this.tbody = this.root.querySelector("table tbody");
+    this.update();
   }
 
   update() {
-    this.removeAllTr();
-    
-    const entries = [
-        {
-            login: "matheusribeiroa",
-            name: "Matheus Ribeiro",
-            public_repos: "31",
-            followers: "189"
-        },
-        {
-            login: "joao123",
-            naem: "Joao da Silva",
-            public_repos: "31",
-            followers: "189"
-        }
-    ]
-    entries.forEach(user => console.log(user))
-    
+    this.removeAllTr();    
+
+    this.entries.forEach(user => {
+        const row = this.createRow();
+        row.querySelector('.user img').src = `https://github.com/${user.login}.png`;
+        row.querySelector('.user img').alt = `Imagem de ${user.name}`
+        row.querySelector('.user p').textContent = user.name;
+        row.querySelector('.user span').textContent = user.login;
+        row.querySelector('.repositories').textContent = user.public_repos;
+        row.querySelector('.followers').textContent = user.followers;
+        
+        this.tbody.append(row);
+    })
   }
 
   createRow() {
     //o tr precisa ser criado direto pela DOM
     //o conteúdo eu armazeno em uma variável e o tr eu crio em outro
     const tr = document.createElement('tr');
-    tr.innerHTML(`
+    tr.innerHTML = `
                     <td class="user">
                         <img src="" alt="imagem do github">
-                        <a href="https://github.com/joao12" target="_blank">
+                        <a href="https://github.com/" target="_blank">
                             <p>Joao</p>
                             <span>joao12</span>
                         </a>
@@ -56,13 +70,12 @@ export class GitFavoritesView extends GitFavorites {
                     <td class="remove">
                         &times;
                     </td>
-                `);
+                `;
+    return tr;
   }
 
   removeAllTr() {
-    const tbody = this.root.querySelector("table tbody");
-
-    tbody.querySelectorAll("tr").forEach((el) => {
+    this.tbody.querySelectorAll("tr").forEach((el) => {
       el.remove();
     });
   }
