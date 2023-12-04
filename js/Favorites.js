@@ -45,6 +45,7 @@ export class GitFavoritesView extends GitFavorites {
         row.querySelector('.repositories').textContent = user.public_repos;
         row.querySelector('.followers').textContent = user.followers;
         
+
         this.tbody.append(row);
     })
   }
