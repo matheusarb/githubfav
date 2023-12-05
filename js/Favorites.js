@@ -8,21 +8,18 @@ export class GitFavorites {
   }
 
   load() {
-    this.entries = [
-        {
-            login: "matheusarb",
-            name: "Matheus Ribeiro",
-            public_repos: "31",
-            followers: "189"
-        },
-        {
-            login: "jgsneves",
-            name: "Joao Gabriel",
-            public_repos: "46",
-            followers: "128"
-        }
-    ];
-  }
+    this.entries = JSON.parse(localStorage.getItem('@github-favorites:')) || [];
+      
+  };
+
+  delete(user) {
+    const filteredEntries = this.entries
+        .filter(entry => entry.login !== user.login)
+    
+    this.entries = filteredEntries;
+    this.update();
+  };
+  
 }
 
 export class GitFavoritesView extends GitFavorites {
@@ -39,15 +36,22 @@ export class GitFavoritesView extends GitFavorites {
     this.entries.forEach(user => {
         const row = this.createRow();
         row.querySelector('.user img').src = `https://github.com/${user.login}.png`;
-        row.querySelector('.user img').alt = `Imagem de ${user.name}`
+        row.querySelector('.user img').alt = `Imagem de $`
         row.querySelector('.user p').textContent = user.name;
         row.querySelector('.user span').textContent = user.login;
         row.querySelector('.repositories').textContent = user.public_repos;
         row.querySelector('.followers').textContent = user.followers;
         
+        row.querySelector('.remove').onclick = () => {
+            const userConfirmation = confirm('Tem certeza que deseja excluir esse usuário?');
+            if (userConfirmation) {
+                this.delete(user);
+            }
+        }
 
         this.tbody.append(row);
     })
+
   }
 
   createRow() {
