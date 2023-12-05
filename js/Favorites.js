@@ -32,13 +32,18 @@ export class Favorites {
 
   async add(username) {
     try {
+        const userExists = this.entries.find(entry => entry.login == username);
+        console.log(userExists);
+
+        if (userExists) {
+            throw new Error('Usuário já cadastrado.')
+        }
+
         const user = await GithubSearch.search(username);
         if(user.login == undefined) {
             throw new Error('Usuário não encontrado.');
         }
-        // if(user.login == localStorage.getItem('@github-favorites:').login) {
-        //     return;
-        // }
+
         this.entries = [user, ...this.entries];
     } catch(e) {
         alert(e.message);
@@ -53,6 +58,7 @@ export class Favorites {
     
     this.entries = filteredEntries;
     this.update();
+    this.save();
   };
   
 
