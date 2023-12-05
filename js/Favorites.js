@@ -30,12 +30,14 @@ export class Favorites {
     try {
         const user = await GithubSearch.search(username);
         if(user.login == undefined) {
-            throw new Error('Usuário não encontrado');
+            throw new Error('Usuário não encontrado.');
         }
+        console.log(user);
+        this.entries = [user, ...this.entries];
     } catch(e) {
         alert(e.message);
     }
-    return user;
+    this.update();
   }
 
   delete(user) {
