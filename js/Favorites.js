@@ -1,25 +1,10 @@
-// classe que irá conter a lógica dos dados
-// como os dados serão estruturados
-
-export class GithubSearch {
-    static async search(username) {
-        const endpoint = `https://api.github.com/users/${username}`;
-        return await fetch(endpoint)
-                        .then(data => data.json())
-                        .then(data => ({
-                            name: data.name,
-                            login: data.login,
-                            public_repos: data.public_repos,
-                            followers: data.followers
-                          }));
-    }
-}
+import { GithubSearch } from './GithubSearch.js';
 
 export class Favorites {
     constructor(root) {
         this.root = document.querySelector(root)
-        this.load()
-        this.onadd()
+        this.load();
+        this.onadd();
     }
 
   load() {
@@ -92,6 +77,7 @@ export class FavoritesView extends Favorites {
         row.querySelector('.user img').src = `https://github.com/${user.login}.png`;
         row.querySelector('.user img').alt = `Imagem de ${user.name}`;
         row.querySelector('.user p').textContent = user.name;
+        row.querySelector('.user a').href = `https://github.com/${user.login}`;
         row.querySelector('.user span').textContent = user.login;
         row.querySelector('.repositories').textContent = user.public_repos;
         row.querySelector('.followers').textContent = user.followers;
