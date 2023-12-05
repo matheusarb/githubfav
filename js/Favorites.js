@@ -23,8 +23,12 @@ export class Favorites {
     }
 
   load() {
-    this.entries = JSON.parse(localStorage.getItem('@github-favorites:')) || []
-  };
+    this.entries = JSON.parse(localStorage.getItem('@github-favorites:')) || [];
+  }
+
+  save() {
+    localStorage.setItem('@github-favorites:', JSON.stringify(this.entries));
+  }
 
   async add(username) {
     try {
@@ -32,12 +36,15 @@ export class Favorites {
         if(user.login == undefined) {
             throw new Error('Usuário não encontrado.');
         }
-        console.log(user);
+        // if(user.login == localStorage.getItem('@github-favorites:').login) {
+        //     return;
+        // }
         this.entries = [user, ...this.entries];
     } catch(e) {
         alert(e.message);
     }
     this.update();
+    this.save();
   }
 
   delete(user) {
@@ -71,7 +78,7 @@ export class FavoritesView extends Favorites {
   }
 
   update() {
-    this.removeAllTr();    
+    this.removeAllTr();
 
     this.entries.forEach( user => {
         const row = this.createRow();
