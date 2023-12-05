@@ -15,18 +15,28 @@ export class GithubSearch {
     }
 }
 
-export class GitFavorites {
-  constructor(root) {
-    this.root = document.querySelector(root);
-    this.load();
-    this.onadd();
-
-    GithubSearch.search('matheusarb').then(response => console.log(response))
-  }
+export class Favorites {
+    constructor(root) {
+        this.root = document.querySelector(root)
+        this.load()
+        this.onadd()
+    }
 
   load() {
-    this.entries = JSON.parse(localStorage.getItem('@github-favorites:')) || new Array();
+    this.entries = JSON.parse(localStorage.getItem('@github-favorites:')) || []
   };
+
+  async add(username) {
+    try {
+        const user = await GithubSearch.search(username);
+        if(user.login == undefined) {
+            throw new Error('Usuário não encontrado');
+        }
+    } catch(e) {
+        alert(e.message);
+    }
+    return user;
+  }
 
   delete(user) {
     const filteredEntries = this.entries
@@ -39,21 +49,22 @@ export class GitFavorites {
 
 }
 
-export class FavoritesView extends GitFavorites {
-  constructor(root) {
-    super(root);
-
-    this.tbody = this.root.querySelector("table tbody");
-
-    this.update();
-    
-  }
+export class FavoritesView extends Favorites {
+    constructor(root) {
+      super(root)
+  
+      this.tbody = this.root.querySelector('table tbody')
+  
+      this.update()
+      this.onadd()
+    }
 
   onadd() {
-    const addButon = this.root.querySelector(".search button");
-    addButon.onclick = () => {
-        const inputVal = this.root.querySelector(".search input").value;
-        console.log(inputVal);
+    const addButton = this.root.querySelector('.search button')
+    addButton.onclick = () => {
+      const { value } = this.root.querySelector('.search input')
+
+      this.add(value)
     }
   }
 
