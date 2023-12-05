@@ -1,4 +1,4 @@
-import { GitFavoritesView } from "./Favorites.js";
+import { FavoritesView } from "./Favorites.js";
 
-new GitFavoritesView("#app");
+new FavoritesView("#app");
 

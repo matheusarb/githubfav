@@ -1,17 +1,17 @@
 // classe que irá conter a lógica dos dados
 // como os dados serão estruturados
 
-export class GithubUser {
-    static search(username) {
+export class GithubSearch {
+    static async search(username) {
         const endpoint = `https://api.github.com/users/${username}`;
-        return fetch(endpoint)
-                .then(data => data.json())
-                .then(data => ({
-                    login: data.login,
-                    name: data.name,
-                    public_repos: data.public_repos,
-                    followers: data.followers
-                }))
+        return await fetch(endpoint)
+                        .then(data => data.json())
+                        .then(data => ({
+                            name: data.name,
+                            login: data.login,
+                            public_repos: data.public_repos,
+                            followers: data.followers
+                          }));
     }
 }
 
@@ -19,11 +19,13 @@ export class GitFavorites {
   constructor(root) {
     this.root = document.querySelector(root);
     this.load();
+    this.onadd();
+
+    GithubSearch.search('matheusarb').then(response => console.log(response))
   }
 
   load() {
-    this.entries = JSON.parse(localStorage.getItem('@github-favorites:')) || [];
-
+    this.entries = JSON.parse(localStorage.getItem('@github-favorites:')) || new Array();
   };
 
   delete(user) {
@@ -34,21 +36,33 @@ export class GitFavorites {
     this.update();
   };
   
+
 }
 
-export class GitFavoritesView extends GitFavorites {
+export class FavoritesView extends GitFavorites {
   constructor(root) {
     super(root);
 
     this.tbody = this.root.querySelector("table tbody");
+
     this.update();
+    
+  }
+
+  onadd() {
+    const addButon = this.root.querySelector(".search button");
+    addButon.onclick = () => {
+        const inputVal = this.root.querySelector(".search input").value;
+        console.log(inputVal);
+    }
   }
 
   update() {
     this.removeAllTr();    
 
-    this.entries.forEach(user => {
+    this.entries.forEach( user => {
         const row = this.createRow();
+
         row.querySelector('.user img').src = `https://github.com/${user.login}.png`;
         row.querySelector('.user img').alt = `Imagem de ${user.name}`;
         row.querySelector('.user p').textContent = user.name;
@@ -65,7 +79,6 @@ export class GitFavoritesView extends GitFavorites {
 
         this.tbody.append(row);
     })
-
   }
 
   createRow() {
